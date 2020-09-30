@@ -1,4 +1,8 @@
 #!/bin/bash
+if ! command -v docker &> /dev/null; then
+    echo " !!! docker could not be found"
+    exit
+fi
 
 APP_ID="dart_server"
 USING_PORTS="-p 8080:8080"
