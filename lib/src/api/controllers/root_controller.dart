@@ -5,7 +5,7 @@ class RootController implements Controller {
   Future<void> before(Context ctx) {}
 
   @GetJson()
-  List<String> getAll(Context ctx) {
+  List<String> getRoot(Context ctx) {
     return ["a", "b", "c"];
   }
 }
