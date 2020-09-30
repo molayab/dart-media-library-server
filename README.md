@@ -11,8 +11,11 @@ The library namespace encapsulates all multimedia provided features.
 ##### Songs
 The songs namespace defines songs CRUD.
 
-`/library/songs/all` returns all the songs.
-`/library/songs/:id` returns the song with a given id.
+`/library/songs/all` 
+returns all the songs.
+
+`/library/songs/:id` 
+returns the song with a given id.
 
 ## How to run 
 
