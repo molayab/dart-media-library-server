@@ -14,4 +14,17 @@ class SongsController implements Controller {
     var id = ctx.pathParams.get("id");
     return "Requested id was ${id}";
   }
+
+  @PutJson(path: "/:id/toggleLike")
+  Object toggleLikeSong(Context ctx) {
+    var id = ctx.pathParams.get("id");
+    return {"isLiked": true, "message": "Liked song with id: ${id}"};
+  }
+
+  @PutJson(path: "/:id/toggleDislike")
+  Object toggleDislikeSong(Context ctx) {
+    var id = ctx.pathParams.get("id");
+
+    return {"isDisliked": false, "message": "Disliked song with id: ${id}"};
+  }
 }
