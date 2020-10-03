@@ -6,4 +6,5 @@ class Track extends MediaModel {
   String title;
   Album album;
   List<Artist> artists;
+  String url;
 }
