@@ -1,0 +1,7 @@
+graph LR
+      API((API)) -- asks --> Domain((Domain))
+      Domain((Domain)) -- asks --> Data((Data))
+      Domain((Domain)) -- holds --> UseCases 
+      UseCase -- uses --> ConcreteProviderInterface 
+      ConcreteProviderInterface -- generalizes --> ConcreteDataProvider
+      Data((Data)) -- holds --> DataProviders
