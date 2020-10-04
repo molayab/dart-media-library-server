@@ -15,9 +15,8 @@ class TrackEntity implements Decodeable {
   TrackEntity(this.title, this.album, this.artists, this.url, this.genre);
 
   static TrackEntity encode(Map<String, dynamic> ctx) {
-    final artistsContextList = ctx['artists'] as List;
-    final artists =
-        artistsContextList.map((e) => e as Map<String, dynamic>).map((e) {
+    final artiststList = ctx['artists'] as List;
+    final artists = artiststList.map((e) => e as Map<String, dynamic>).map((e) {
       final name = e['name'] as String;
       return ArtistEntity(name);
     }).toList();

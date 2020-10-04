@@ -3,6 +3,8 @@ import 'package:dart_server/src/data/entities/artist.dart';
 import 'package:dart_server/src/data/entities/genre.dart';
 import 'package:dart_server/src/data/entities/track.dart';
 import 'package:dart_server/src/data/providers/library_provider.dart';
+import 'package:dart_server/src/domain/models/album.dart';
+import 'package:dart_server/src/domain/use_cases/get_albums_use_case.dart';
 import 'package:dart_server/src/domain/use_cases/upload_track_use_case.dart';
 import 'package:dart_server/src/foundation/result.dart';
 import 'package:jaguar_reflect/jaguar_reflect.dart';
@@ -29,11 +31,10 @@ class LibraryController implements Controller {
   }
 
   @GetJson(path: '/albums')
-  Future<List<Map<String, dynamic>>> getAlbums(Context ctx) async {
+  Future<List<Album>> getAlbums(Context ctx) async {
     // Just for testing, provider can not be used at this level.
-    LibraryProvider p = LibraryProvider();
-    final a = await p.getAlbums();
-    return a.map((e) => e.decode()).toList();
+    final p = GetAlbumsUseCase(LibraryProvider());
+    return await p.run();
   }
 
   @GetJson(path: '/albums/:id')
