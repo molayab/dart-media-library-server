@@ -1,7 +1,19 @@
 graph LR
       API((API)) -- asks --> Domain((Domain))
       Domain((Domain)) -- asks --> Data((Data))
-      Domain((Domain)) -- holds --> UseCases 
-      UseCase -- uses --> ConcreteProviderInterface 
-      ConcreteProviderInterface -- generalizes --> ConcreteDataProvider
+      Domain((Domain)) -- holds --> UseCases
+      Domain((Domain)) -- holds --> ProviderInterfaces
       Data((Data)) -- holds --> DataProviders
+
+      subgraph DataLayer
+            ConcreteDataProvider -- abstracts --> Sources((Data Sources))
+      end
+      
+      subgraph DomainLayer
+            ConcreteUseCase -- uses --> ConcreteProviderInterface
+            ConcreteProviderInterface -- generalizes --> ConcreteDataProvider
+      end
+
+      subgraph ApiLayer
+            ConcreteController -- uses --> ConcreteUseCase
+      end
