@@ -3,3 +3,4 @@ dependencies:
   jaguar: 2.4.44
   jaguar_reflect: 2.4.6
   mongo_dart: ^0.4.3
+  dart_tags: ^0.3.1
