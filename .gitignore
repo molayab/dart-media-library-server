@@ -18,7 +18,9 @@ doc/api/
 # generated JavaScript files
 *.dart.js
 *.info.json
-*.js
 *.js_
 *.js.deps
 *.js.map
+
+# binary folder
+bin/
