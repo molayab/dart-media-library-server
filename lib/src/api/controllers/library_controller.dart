@@ -29,10 +29,19 @@ class LibraryController implements Controller {
   }
 
   @GetJson(path: '/albums')
-  Future<List<Map<String, dynamic>>> getAlbums() async {
+  Future<List<Map<String, dynamic>>> getAlbums(Context ctx) async {
     // Just for testing, provider can not be used at this level.
     LibraryProvider p = LibraryProvider();
     final a = await p.getAlbums();
+    return a.map((e) => e.decode()).toList();
+  }
+
+  @GetJson(path: '/albums/:id')
+  Future<List<Map<String, dynamic>>> getAlbumTracks(Context ctx) async {
+    // Just for testing, provider can not be used at this level.
+    LibraryProvider p = LibraryProvider();
+    final id = ctx.pathParams.get("id");
+    final a = await p.getAlbumTracksByAlbumId(id);
     return a.map((e) => e.decode()).toList();
   }
 
