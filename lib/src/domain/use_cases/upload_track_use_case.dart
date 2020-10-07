@@ -16,9 +16,18 @@ class UploadTrackUseCase implements UploadTrackUseCaseInterface {
       this.storageProvider, this.tagProvider, this.libraryProvider);
 
   Future<Result<void>> run(File file) async {
+    // get information from file.
     final track = await tagProvider.getTrackEntityFromFile(file);
+
+    // check if track is stored, or skip it.
+
+    // add track to library.
     libraryProvider.addTrack(track);
+
+    // save track in the storage provider.
     await storageProvider.save(file);
+
+    // notiy the operation result.
     return await new Result(ResultStatus.success);
   }
 }
