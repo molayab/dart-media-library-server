@@ -1,43 +1,62 @@
-import 'package:dart_server/src/data/entities/album.dart';
-import 'package:dart_server/src/data/entities/artist.dart';
-import 'package:dart_server/src/data/entities/genre.dart';
 import 'package:dart_server/src/data/providers/mongo_provider.dart';
 
 class TrackEntity implements Decodeable {
   String title;
-  AlbumEntity album;
-  List<ArtistEntity> artists;
-  String url;
-  String bpm;
-  String textKey;
-  GenreEntity genre;
+  String album;
+  String albumArtist;
+  String artist;
+  String originalArtist;
+  int year;
+  String genre;
+  int track;
+  double bpm;
+  String key;
+  String label;
+  String contentGroupDescription;
+  String description;
+  String resourceLocationId;
 
-  TrackEntity(this.title, this.album, this.artists, this.url, this.genre);
+  TrackEntity(this.title, this.resourceLocationId);
 
   static TrackEntity encode(Map<String, dynamic> ctx) {
-    final artiststList = ctx['artists'] as List;
-    final artists = artiststList.map((e) => e as Map<String, dynamic>).map((e) {
-      final name = e['name'] as String;
-      return ArtistEntity(name);
-    }).toList();
-
     final title = ctx['title'] as String;
-    final album = AlbumEntity.encode(ctx['album'] as Map<String, dynamic>);
-    final resourceLocation = ctx['resourceLocation'] as Map<String, dynamic>;
-    final url = resourceLocation['url'] as String;
-    return TrackEntity(title, album, artists, url, GenreEntity("genre"));
+    final resourceUri = ctx['resourceLocationId'] as String;
+
+    var track = TrackEntity(title, resourceUri);
+    track.title = ctx['title'] as String;
+    track.album = ctx['album'] as String;
+    track.artist = ctx['artist'] as String;
+    track.genre = ctx['genre'] as String;
+    track.bpm = ctx['bpm'] as double;
+    track.key = ctx['key'] as String;
+    track.albumArtist = ctx['albumArtist'] as String;
+    track.originalArtist = ctx['originalArtist'] as String;
+    track.year = ctx['year'] as int;
+    track.track = ctx['track'] as int;
+    track.label = ctx['label'] as String;
+    track.contentGroupDescription = ctx['contentGroupDescription'] as String;
+    track.description = ctx['description'] as String;
+
+    return track;
   }
 
   @override
   Map<String, dynamic> decode() {
     return {
       "title": title,
-      "album": album.decode(),
-      "artists": artists.map((e) => e.decode()).toList(),
-      "resourceLocation": {"url": url},
-      "genre": genre.decode(),
+      "album": album,
+      "artist": artist,
+      "resourceLocationId": resourceLocationId,
+      "genre": genre,
       "bpm": bpm,
-      "key": textKey
+      "key": key,
+      "albumArtist": albumArtist,
+      "originalArtist": originalArtist,
+      "year": year,
+      "track": track,
+      "label": label,
+      "contentGroupDescription": contentGroupDescription,
+      "description": description
     };
   }
 }

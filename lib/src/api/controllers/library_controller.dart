@@ -1,8 +1,5 @@
-import 'package:dart_server/src/data/entities/album.dart';
-import 'package:dart_server/src/data/entities/artist.dart';
-import 'package:dart_server/src/data/entities/genre.dart';
-import 'package:dart_server/src/data/entities/track.dart';
 import 'package:dart_server/src/data/providers/library_provider.dart';
+import 'package:dart_server/src/data/providers/tag_provider.dart';
 import 'package:dart_server/src/domain/models/album.dart';
 import 'package:dart_server/src/domain/use_cases/get_albums_use_case.dart';
 import 'package:dart_server/src/domain/use_cases/upload_track_use_case.dart';
@@ -12,22 +9,13 @@ import 'package:path/path.dart' as p;
 
 @GenController(path: '/library')
 class LibraryController implements Controller {
-  UploadTrackUseCaseInterface uploadTrackUseCase =
-      new UploadTrackUseCase(StorageProvider());
+  UploadTrackUseCaseInterface uploadTrackUseCase = new UploadTrackUseCase(
+      StorageProvider(), TagProvider(), LibraryProvider());
   Future<void> before(Context ctx) {}
 
   @GetJson()
   Future<Map<String, dynamic>> getLibray(Context ctx) async {
-    // Just for testing, provider can not be used at this level.
-    LibraryProvider p = LibraryProvider();
-    var genre = GenreEntity("Genre");
-    var artist = ArtistEntity("Artist Name");
-    var album = AlbumEntity("id", "New Album Name", artist, "1960");
-    var track =
-        TrackEntity("Title", album, [artist], "storage_provider::id", genre);
-
-    await p.addTrack(track);
-    return await track.decode();
+    return {};
   }
 
   @GetJson(path: '/albums')
@@ -53,7 +41,9 @@ class LibraryController implements Controller {
     final temporalFile =
         await resource.writeTo(p.join('/tmp', resource.filename));
     var useCaseFuture = uploadTrackUseCase.run(temporalFile);
-    var controllerFuture = useCaseFuture.then((value) {
+
+    // ignore: missing_return
+    return useCaseFuture.then((value) {
       switch (value.status) {
         case ResultStatus.success:
           return "Success on upload";
@@ -61,7 +51,5 @@ class LibraryController implements Controller {
           return "Failure on upload";
       }
     });
-
-    return controllerFuture;
   }
 }

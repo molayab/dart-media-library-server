@@ -13,8 +13,8 @@ class GetAlbumsUseCase implements GetAlbumsUseCaseInterface {
   Future<List<Album>> run() async {
     final albums = await libraryProvider.getAlbums();
     return albums.map((e) {
-      final artist = Artist(e.artist.name);
-      return Album(e.id, e.title, artist, e.releaseYear);
+      final artist = Artist("e.artist.name");
+      return Album("e.id", "e.title", artist, "e.releaseYear");
     }).toList();
   }
 }

@@ -1,11 +1,9 @@
 import 'dart:io';
-import 'package:dart_server/src/data/entities/album.dart';
-import 'package:dart_server/src/data/entities/artist.dart';
-import 'package:dart_server/src/data/entities/genre.dart';
 import 'package:dart_server/src/data/entities/track.dart';
+import 'package:dart_server/src/domain/provider_interfaces/tag_provider_interface.dart';
 import 'package:dart_tags/dart_tags.dart';
 
-class TagProvider {
+class TagProvider implements TagProviderInterface {
   TagProcessor _tagProcessor;
 
   TagProvider() {
@@ -17,13 +15,38 @@ class TagProvider {
     return await _tagProcessor.getTagsFromByteArray(file.readAsBytes());
   }
 
-  Future<List<TrackEntity>> getTrackEntityFromFile(File file) async {
-    var a = await getTagsFromFile(file.path);
-    return a.map((e) {
-      final artist = ArtistEntity(e.tags['artist']);
-      final album = AlbumEntity(null, e.tags['album'], artist, 'mock');
-      return TrackEntity(
-          e.tags['title'], album, [artist], "storage::id", GenreEntity("mock"));
+  Future<TrackEntity> getTrackEntityFromFile(File file) async {
+    var tags = await getTagsFromFile(file.path);
+
+    // supporting mp3 just for now...
+    final tag = tags.firstWhere((element) {
+      return (element.type == "ID3" && element.version.startsWith("2."));
     });
+
+    final resourceId = file.hashCode;
+    return _buildTrackEntityFromTagAndStorageId(
+        tag.tags, resourceId.toString());
+  }
+
+  TrackEntity _buildTrackEntityFromTagAndStorageId(
+      Map<String, dynamic> tags, String id) {
+    final title = tags['title'] as String;
+    final resourceUri = "stream::${id}";
+
+    var track = TrackEntity(title, resourceUri);
+    track.album = tags['album'] as String;
+    track.artist = tags['artist'] as String;
+    track.albumArtist = tags['TPE2'] as String;
+    track.year = int.parse(tags['year'] as String);
+    track.genre = tags['genre'] as String;
+    track.originalArtist = tags['TOPE'] as String;
+    track.track = int.parse(tags['track'] as String);
+    track.label = tags['TPUB'] as String;
+    track.bpm = double.parse(tags['TBPM'] as String);
+    track.key = tags['TKEY'] as String;
+    track.contentGroupDescription = tags['TIT1'] as String;
+
+    // TODO: Extract cover image.
+    return track;
   }
 }

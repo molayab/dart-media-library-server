@@ -1,4 +1,3 @@
-import 'package:dart_server/src/data/entities/album.dart';
 import 'package:dart_server/src/data/entities/track.dart';
 import 'package:dart_server/src/data/providers/mongo_provider.dart';
 import 'package:dart_server/src/domain/provider_interfaces/library_provider_interface.dart';
@@ -13,7 +12,7 @@ class LibraryProvider extends MongoProvider
     insert(track, collection);
   }
 
-  Future<List<AlbumEntity>> getAlbums() async {
+  Future<List<void>> getAlbums() async {
     await connect();
 
     final pipeline = AggregationPipelineBuilder()
@@ -31,7 +30,7 @@ class LibraryProvider extends MongoProvider
 
     final albumList = result.first['albums'] as List;
     final albums = albumList.map((e) => e as Map<String, dynamic>).toList();
-    return albums.map((e) => AlbumEntity.encode(e)).toList();
+    return albums.toList();
   }
 
   Future<List<TrackEntity>> getAlbumTracksByAlbumId(String id) async {
